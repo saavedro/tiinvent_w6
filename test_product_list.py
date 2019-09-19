@@ -1,6 +1,21 @@
-from product_list import app
+from product_list import app, db, Product
 import json
+import pytest
+
 test_client = app.test_client()
+
+# Add example item in the database
+@pytest.fixture(scope='session', autouse=True)
+def with_test_db():
+    db.create_all()
+    initial_product = Product(id=0, name='Product1', price=1000, quantity=5)
+
+    db.session.add(initial_product)
+    db.session.commit()
+    
+    yield
+    
+    db.drop_all()
 
 def test_get_all_products():
     rv = test_client.get('/products')
