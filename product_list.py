@@ -29,7 +29,7 @@ def hello_world():
 
 @app.route('/products')
 def get_all_products():
-    return jsonify(json_list=[p.serialize() for p in Product.query.all()])
+    return jsonify(products=[p.serialize() for p in Product.query.all()])
     
 @app.route('/products/<int:_id>', methods=['GET'])
 def get_product(_id):
