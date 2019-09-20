@@ -1,0 +1,62 @@
+dziubpi1:~/environment/dziubpi1 $ mkdir Workshop6
+dziubpi1:~/environment/dziubpi1 $ cp Workshop5/requirements.txt Workshop5/.gitignore Workshop5/assignment-1/product_list.py Workshop5/assignment-1/test_product_list.py Workshop6/
+
+dziubpi1:~/environment/dziubpi1/Workshop6 $ git init
+dziubpi1:~/environment/dziubpi1/Workshop6 (master) $ git add .
+dziubpi1:~/environment/dziubpi1/Workshop6 (master) $ git commit -am "initial commit"
+
+dziubpi1:~/environment/dziubpi1/Workshop6 (master) $ python3 -m venv venv
+dziubpi1:~/environment/dziubpi1/Workshop6 (master) $ source venv/bin/activate
+
+(venv) dziubpi1:~/environment/dziubpi1/Workshop6 (master) $ echo "gunicorn" >> requirements.txt
+(venv) dziubpi1:~/environment/dziubpi1/Workshop6 (master) $ pip install -r requirements.txt
+
+ # defining API key, only for purpose of this lab, usually you would do `heroku login`
+export HEROKU_API_KEY=$YOUR_KEY_KERE
+
+(venv) dziubpi1:~/environment/dziubpi1/Workshop6 (master) $ heroku create --ssh-git
+Creating app... done, ⬢ enigmatic-badlands-63224
+https://enigmatic-badlands-63224.herokuapp.com/ | git@heroku.com:enigmatic-badlands-63224.git
+
+(venv) dziubpi1:~/environment/dziubpi1/Workshop6 (master) $ git remote -v
+heroku  git@heroku.com:enigmatic-badlands-63224.git (fetch)
+heroku  git@heroku.com:enigmatic-badlands-63224.git (push)
+
+dziubpi1:~/environment/dziubpi1/Workshop6 (master) $ echo "web: gunicorn product_list:app" >> Procfile
+
+(venv) dziubpi1:~/environment/dziubpi1/Workshop6 (master) $ git add Procfile requirements.txt
+(venv) dziubpi1:~/environment/dziubpi1/Workshop6 (master) $ git commit -m "prepare heroku deploy"
+
+(venv) dziubpi1:~/environment/dziubpi1/Workshop6 (master) $ git push heroku master
+
+(venv) dziubpi1:~/environment/dziubpi1/Workshop6 (master) $ heroku apps:info enigmatic-badlands-63224
+
+Add SQLAlchemy to requirements.txt
+Add psycopg2-binary to requirements.txt
+
+=== enigmatic-badlands-63224
+Auto Cert Mgmt: false
+Dynos:          web: 1
+Git URL:        https://git.heroku.com/enigmatic-badlands-63224.git
+Owner:          xxx@yyy
+Region:         us
+Repo Size:      0 B
+Slug Size:      46 MB
+Stack:          heroku-18
+Web URL:        https://enigmatic-badlands-63224.herokuapp.com/
+
+# Extra
+## Looking inside a dyno
+heroku run -a $APP_NAME /bin/bash
+
+Final comments:
+Normally you would like to put your models inside a separate file same as config.
+
+Reference
+Setting up Flask and Heroku:
+https://devcenter.heroku.com/articles/preparing-a-codebase-for-heroku-deployment
+https://medium.com/the-andela-way/deploying-a-python-flask-app-to-heroku-41250bda27d0
+
+SQLAlchemy for Flask:
+https://realpython.com/flask-by-example-part-2-postgres-sqlalchemy-and-alembic/
+https://flask-sqlalchemy.palletsprojects.com/en/2.x/quickstart/#a-minimal-application
